@@ -8,7 +8,6 @@ import { RootState } from "@/src/redux/store";
 export function useAuth() {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
-  console.log("🚀 ~ useAuth ~ user:", user)
   const token = getCookie("token");
 
   useEffect(() => {

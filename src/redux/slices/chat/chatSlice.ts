@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../../../services/axiosInstance";
 import socketService from "@/src/services/socketService";
 import { isEmpty } from "lodash";
+import { IMessageType } from "@/src/components/chat/MessageContent";
 
 export interface Room {
   id: number;
@@ -15,6 +16,7 @@ interface ChatState {
   messages: Message[];
   selectedRoom?: Room | null;
   hasMoreMessage?: boolean;
+  loadingMore:boolean
 }
 
 export interface Message {
@@ -22,15 +24,22 @@ export interface Message {
   content: string;
   roomId: number;
   senderId?: number;
-  type: string;
+  type: IMessageType;
   username?: string;
+  createdAt: number;
+  sender?: {
+    id: string;
+    name: string;
+    avatar: string;
+  };
 }
 
 export interface MessageSending {
   content: string;
   roomId: number;
-  type: string;
+  type: IMessageType;
   senderId: number;
+  createdAt: number;
 }
 
 
@@ -42,6 +51,7 @@ const initialState: ChatState = {
   messages: [],
   selectedRoom: null,
   hasMoreMessage: false,
+  loadingMore:false
 };
 
 // ✅ Fetch Rooms API
@@ -67,16 +77,29 @@ export const fetchRoomMessages = createAsyncThunk(
   }
 );
 
+
+// Fetch More Messages
+export const fetchMoreMessages = createAsyncThunk(
+  "chat/fetchMoreMessages",
+  async ({ roomId, before }: { roomId: number; before: number }) => {
+    const response = await axios.get(`/messages/${roomId}`, {
+      params: { before },
+    });
+    return response.data;
+  }
+);
+
+
 const chatSlice = createSlice({
   name: "chat",
   initialState: initialState as ChatState,
   reducers: {
     sendMessage: (state, action: PayloadAction<MessageSending>) => {
       socketService.sendMessage(action.payload);
-      state.messages.push(action.payload); // Optimistic UI update
+      state.messages.unshift(action.payload); // Optimistic UI update
     },
     receiveMessage: (state, action: PayloadAction<Message>) => {
-      state.messages.push(action.payload);
+      state.messages.unshift(action.payload);
     },
     onSelectedRoom: (state, action: PayloadAction<Room>) => {
       state.selectedRoom = action.payload;
@@ -101,11 +124,27 @@ const chatSlice = createSlice({
       })
       .addCase(fetchRoomMessages.fulfilled, (state, action) => {
         const {messageData,room} = action.payload
-        state.messages = [...messageData, ...state.messages]; // Prepend older messages
-        state.hasMoreMessage = !messageData?.length;
+        state.messages = [...messageData]; // Prepend older messages
+        state.hasMoreMessage = !!messageData?.length;
         state.loading = false;
         state.selectedRoom = room
-
+      })
+      .addCase(fetchMoreMessages.pending, (state) => {
+        state.loadingMore = true;
+      })
+      .addCase(fetchMoreMessages.fulfilled, (state, action) => {
+        state.loadingMore = false;
+        if(!action.payload?.length){
+          state.hasMoreMessage = false
+          return
+        }
+        const newMessage = ([...state.messages]).concat(action.payload)
+        state.messages = newMessage
+        state.hasMoreMessage = true
+      })
+      .addCase(fetchMoreMessages.rejected, (state) => {
+        state.loadingMore = false;
+        state.hasMoreMessage = false
       });
   },
 });

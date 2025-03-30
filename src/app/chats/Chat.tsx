@@ -7,6 +7,8 @@ import { AppDispatch, RootState } from '@/src/redux/store';
 import { fetchRooms } from '@/src/redux/slices/chat/chatSlice';
 import RoomSidebar from '@/src/components/chat/RoomSidebar';
 import FormInput from '@/src/components/chat/FormInput';
+import ChatMessages from '@/src/components/chat/ContentMessages';
+import { useSocket } from '@/src/hooks/useSocket';
 
 interface Message {
   username: string;
@@ -15,22 +17,11 @@ interface Message {
 
 export default function Chat() {
   const dispatch = useDispatch<AppDispatch>();
-  const {  messages, loading,selectedRoom } = useSelector((state: RootState) => state.chat);
-  console.log("🚀 ~ Chat ~ messages:", messages)
-  const chatEndRef = useRef<HTMLDivElement | null>(null);
-
+  const { selectedRoom } = useSelector((state: RootState) => state.chat);
+  useSocket()
   useEffect(() => {
     dispatch(fetchRooms());
   }, [dispatch]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-
-  const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   return (
     <div className="flex h-screen bg-gray-900 text-white px-4 py-5">
@@ -42,23 +33,9 @@ export default function Chat() {
         <div className="text-lg font-bold border-b border-bd-base p-2 rounded">
           {selectedRoom?.name || ""}
           </div>
-        <div className="flex-1 overflow-y-auto">
-          <List
-            dataSource={messages}
-            renderItem={(msg) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={<Avatar>{msg.username}</Avatar>}
-                  title={msg.username}
-                  description={msg.content}
-                />
-              </List.Item>
-            )}
-          />
-          <div ref={chatEndRef} />
-        </div>
+        <ChatMessages/>
         {/* Input Area */}
-        <FormInput/>
+        {!!selectedRoom && <FormInput/>}
       </div>
     </div>
   );
