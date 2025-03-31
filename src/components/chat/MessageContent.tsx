@@ -28,7 +28,7 @@ const MessageContent: React.FC<MessageContentProps> = ({ content,type }) => {
   }
 
   return (
-      <p className="bg-gray-700 text-white px-3 py-2 rounded-lg">{content}</p>
+      <p className="text-white rounded-lg font-medium">{content}</p>
   );
 };
 

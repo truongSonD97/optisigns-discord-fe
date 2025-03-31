@@ -11,7 +11,7 @@ import { isWithinDynamicMinutes } from "@/src/utils/timestamptUtil";
 import MessageContent from "./MessageContent";
 
 const ChatMessages: React.FC = () => {
-  const { messages, selectedRoom, hasMoreMessage, loadingMore } =
+  const { messages, selectedRoom, hasMoreMessage, loadingMore,triggerNewMessage } =
     useSelector((state: RootState) => state.chat);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
@@ -26,7 +26,7 @@ const ChatMessages: React.FC = () => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       });
     }
-  }, [selectedRoom?.id]);
+  }, [selectedRoom?.id, triggerNewMessage]);
 
   // Function to load more messages when scrolling to the top
   const handleScroll = async () => {
@@ -134,8 +134,9 @@ const ChatMessages: React.FC = () => {
                     )}
                     <div
                       className={clsx(
-                        `px-3 py-2 rounded-lg text-white self-start`,
-                        { "ml-[40px]": !isFirstMessageOfSender }
+                        `px-3 py-[1px] rounded-lg text-white self-start`,
+                        { "ml-[40px]": !isFirstMessageOfSender },
+                        {"mb-[5px]": isFirstMessageOfSender}
                       )}
                     >
                       <MessageContent content={msg.content} type={msg.type} />

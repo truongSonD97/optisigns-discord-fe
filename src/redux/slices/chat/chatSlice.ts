@@ -16,7 +16,8 @@ interface ChatState {
   messages: Message[];
   selectedRoom?: Room | null;
   hasMoreMessage?: boolean;
-  loadingMore:boolean
+  loadingMore:boolean;
+  triggerNewMessage:boolean
 }
 
 export interface Message {
@@ -51,7 +52,8 @@ const initialState: ChatState = {
   messages: [],
   selectedRoom: null,
   hasMoreMessage: false,
-  loadingMore:false
+  loadingMore:false,
+  triggerNewMessage:false
 };
 
 // ✅ Fetch Rooms API
@@ -96,10 +98,12 @@ const chatSlice = createSlice({
   reducers: {
     sendMessage: (state, action: PayloadAction<MessageSending>) => {
       socketService.sendMessage(action.payload);
-      state.messages.unshift(action.payload); // Optimistic UI update
+      state.messages.unshift(action.payload); 
+      state.triggerNewMessage = !state.triggerNewMessage// Optimistic UI update
     },
     receiveMessage: (state, action: PayloadAction<Message>) => {
       state.messages.unshift(action.payload);
+      state.triggerNewMessage = !state.triggerNewMessage
     },
     onSelectedRoom: (state, action: PayloadAction<Room>) => {
       state.selectedRoom = action.payload;

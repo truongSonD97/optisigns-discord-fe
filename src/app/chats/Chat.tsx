@@ -6,7 +6,7 @@ import { AppDispatch, RootState } from '@/src/redux/store';
 import { fetchRooms } from '@/src/redux/slices/chat/chatSlice';
 import RoomSidebar from '@/src/components/chat/RoomSidebar';
 import FormInput from '@/src/components/chat/FormInput';
-import ChatMessages from '@/src/components/chat/ContentMessages';
+import ChatMessages from '@/src/components/chat/MessagesContent';
 import { useSocket } from '@/src/hooks/useSocket';
 
 

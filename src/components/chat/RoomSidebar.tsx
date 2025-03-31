@@ -16,7 +16,7 @@ export default function RoomSidebar() {
   }
 
   return (
-    <div className="w-[300px] px-2 bg-[#121214] h-screen flex flex-col py-3 space-y-3 border border-bd-base rounded-tl-lg rounded-bl-lg h-full">
+    <div className="w-[300px] px-2 bg-[#121214] flex flex-col py-3 space-y-3 border border-bd-base rounded-tl-lg rounded-bl-lg">
       {rooms.map((room) => (
         <Tooltip title={room.name} placement="right" key={room.id}>
           <div onClick={()=> handleSelectedRoom(room)} className="cursor-pointer flex items-center bg-bd-base p-1 rounded-lg">
