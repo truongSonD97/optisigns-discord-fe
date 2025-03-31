@@ -11,7 +11,7 @@ export function useAuth() {
   const token = getCookie("token");
 
   useEffect(() => {
-    if (!user && token) {
+    if (!user && token && fetchUser) {
       fetchUser();
     }
   }, [user, token]);

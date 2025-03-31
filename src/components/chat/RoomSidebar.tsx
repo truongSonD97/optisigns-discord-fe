@@ -1,7 +1,7 @@
 import { Avatar, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/src/redux/store";
-import { fetchRoomMessages, onSelectedRoom, Room } from "@/src/redux/slices/chat/chatSlice";
+import { fetchRoomMessages, Room } from "@/src/redux/slices/chat/chatSlice";
 
 const DEMO_URL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0ngAqc8J4-EBp59RH5H7G9LC3q-QaKYg8aA&s";
 

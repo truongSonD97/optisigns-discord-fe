@@ -1,6 +1,4 @@
 import { io, Socket } from 'socket.io-client';
-import { Message, receiveMessage } from '../redux/slices/chat/chatSlice';
-import { store } from '@/src/redux/store';
 
 class SocketService {
   private socket: Socket | null = null;

@@ -1,22 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useRef } from "react";
-import { useInView } from "react-intersection-observer";
-import { format, isSameDay, isSameMinute } from "date-fns";
+import { format } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/src/redux/store";
 import { fetchMoreMessages, Message } from "@/src/redux/slices/chat/chatSlice";
 import { Avatar, Skeleton } from "antd";
-import { useAuth } from "@/src/hooks/useAuth";
 import clsx from "clsx";
 import { isWithinDynamicMinutes } from "@/src/utils/timestamptUtil";
 import MessageContent from "./MessageContent";
 
 const ChatMessages: React.FC = () => {
-  const { messages, loading, selectedRoom, hasMoreMessage, loadingMore } =
+  const { messages, selectedRoom, hasMoreMessage, loadingMore } =
     useSelector((state: RootState) => state.chat);
-  console.log("🚀 ~ loadingMore:", loadingMore)
-  console.log("🚀 ~ hasMoreMessage:", hasMoreMessage)
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   // Reverse messages (oldest to newest) so latest messages are at the bottom

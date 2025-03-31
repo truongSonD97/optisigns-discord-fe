@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { List, Avatar } from 'antd';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/src/redux/store';
 import { fetchRooms } from '@/src/redux/slices/chat/chatSlice';
@@ -10,10 +9,7 @@ import FormInput from '@/src/components/chat/FormInput';
 import ChatMessages from '@/src/components/chat/ContentMessages';
 import { useSocket } from '@/src/hooks/useSocket';
 
-interface Message {
-  username: string;
-  content: string;
-}
+
 
 export default function Chat() {
   const dispatch = useDispatch<AppDispatch>();

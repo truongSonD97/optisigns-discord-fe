@@ -70,8 +70,8 @@ export default function FormInput() {
             type: file.type.startsWith("image/") ? "image" : "video",
           })
         );
-      } catch (error) {
-        toast.error("Failed to upload file");
+      } catch (error:any) {
+        toast.error(error?.message || "Failed to upload file");
         return;
       } finally {
         setUploading(false);

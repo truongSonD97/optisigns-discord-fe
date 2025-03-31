@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Form, Input, Flex } from "antd";
@@ -9,8 +8,6 @@ import { AppDispatch } from "@/src/redux/store";
 import Link from "next/link";
 
 export default function LoginScreen() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
@@ -18,17 +15,14 @@ export default function LoginScreen() {
     username: string;
     password: string;
   }) => {
-    setLoading(true);
     try {
       const result = await dispatch(loginUser(values));
       if (loginUser.fulfilled.match(result)) {
         router.push("/chats"); // Redirect if login successful
       }
     } catch (err) {
-      setError("Invalid username or password.");
       console.error("Login failed", err);
     } finally {
-      setLoading(false);
     }
   };
 
