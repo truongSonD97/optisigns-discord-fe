@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../../../services/axiosInstance";
 import socketService from "@/src/services/socketService";
-import { isEmpty } from "lodash";
 import { IMessageType } from "@/src/components/chat/MessageContent";
 
 export interface Room {
