@@ -1,7 +1,9 @@
-import { Avatar, Tooltip } from "antd";
+import { Avatar, Button, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/src/redux/store";
 import { fetchRoomMessages, Room } from "@/src/redux/slices/chat/chatSlice";
+import CreateRoomModal from "./ModalCreateRoom";
+import { useState } from "react";
 
 const DEMO_URL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0ngAqc8J4-EBp59RH5H7G9LC3q-QaKYg8aA&s";
 
@@ -9,7 +11,7 @@ const DEMO_URL = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0ngAqc8
 export default function RoomSidebar() {
   const dispatch = useDispatch<AppDispatch>();
   const { rooms,selectedRoom } = useSelector((state: RootState) => state.chat);
-   
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleSelectedRoom = (room:Room) => {
     dispatch(fetchRoomMessages({room}))
@@ -17,6 +19,14 @@ export default function RoomSidebar() {
 
   return (
     <div className="w-[300px] px-2 bg-[#121214] flex flex-col py-3 space-y-3 border border-bd-base rounded-tl-lg rounded-bl-lg">
+      {/* Create Room Button */}
+      <Button type="primary" className="mb-2" onClick={() => setIsModalVisible(true)}>
+        + Create Room
+      </Button>
+      <CreateRoomModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+      />
       {rooms.map((room) => (
         <Tooltip title={room.name} placement="right" key={room.id}>
           <div onClick={()=> handleSelectedRoom(room)} className="cursor-pointer flex items-center bg-bd-base p-1 rounded-lg">
@@ -38,6 +48,7 @@ export default function RoomSidebar() {
           </div>
         </Tooltip>
       ))}
+
       </div>
   );
 }

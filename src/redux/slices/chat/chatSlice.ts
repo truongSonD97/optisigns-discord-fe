@@ -90,6 +90,14 @@ export const fetchMoreMessages = createAsyncThunk(
   }
 );
 
+export const createNewRoom = createAsyncThunk(
+  "chat/createNewRoom",
+  async (data: { name: string; ownerId: number, usernames:string[] }) => {
+    const response = await axios.post(`/rooms`,data);
+    return response.data;
+  }
+);
+
 
 const chatSlice = createSlice({
   name: "chat",
@@ -148,10 +156,14 @@ const chatSlice = createSlice({
       .addCase(fetchMoreMessages.rejected, (state) => {
         state.loadingMore = false;
         state.hasMoreMessage = false
-      });
+      })
+      .addCase(createNewRoom.fulfilled, (state,action:PayloadAction<Room>)=>{
+        state.rooms.push(action.payload);
+      })
+
   },
 });
 
-export const { sendMessage, receiveMessage, onSelectedRoom } =
+export const { sendMessage, receiveMessage, onSelectedRoom, } =
   chatSlice.actions;
 export default chatSlice.reducer;
